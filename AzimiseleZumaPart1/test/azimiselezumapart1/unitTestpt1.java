@@ -2,6 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
+
+//Test unit file
 package azimiselezumapart1;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -15,6 +17,7 @@ import java.util.Scanner;
 
 public class unitTestpt1 {
 
+    //test username
     @Test
     public void testCheckUserNameValid() {
         Scanner input = new Scanner("kyl_1\n");
@@ -27,6 +30,7 @@ public class unitTestpt1 {
         assertEquals(true, AzimiseleZumaPart1.checkUsername(input));
     }
 
+    //Test password
     @Test
     public void testCheckPasswordValid() {
         Scanner input = new Scanner("Ch&&sec@ke99!");
@@ -39,6 +43,7 @@ public class unitTestpt1 {
         assertEquals(true, AzimiseleZumaPart1.checkPasswordComplexity(input));
     }
 
+     //register user
     @Test
     public void testRegisterUserSuccess() {
         String actualResponse = AzimiseleZumaPart1.registerUser("kyl_1", "Ch&&sec@ke99!", "name", "surname");
@@ -59,7 +64,7 @@ public class unitTestpt1 {
         String actualResponse = AzimiseleZumaPart1.registerUser("kyl_1", "password", "name", "surname");
         assertEquals("The password does not meet the complexity requirements.", actualResponse);
     }
-
+    //login user
     @Test
     public void testLoginUserSuccess() {
         AzimiseleZumaPart1.registerUser("kyl_1", "Ch&&sec@ke99!", "name", "surname");
@@ -88,7 +93,8 @@ public class unitTestpt1 {
         String actualMessage = login.returnLoginStatus(isLoggedIn, "name" , "surname");
         assertEquals(expectedMessage, actualMessage);
     }
-    
+
+    //Test user cellphone number
     @Test
 public void testCheckCellPhoneNumberSuccess() {
     Scanner scan = new Scanner("+27838968976\n");
@@ -103,7 +109,7 @@ public void testCheckCellPhoneNumberFailure() {
     assertEquals(true, actualResponse);
 }
 
-
+    //AssertTrue or AssertFalse
     @Test
     public void testLoginSuccessful() {
         AzimiseleZumaPart1.registerUser("kyl_1", "Ch&&sec@ke99!", "name", "surname");
