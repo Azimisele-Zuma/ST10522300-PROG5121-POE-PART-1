@@ -14,6 +14,15 @@ public class Login {
     String surname;
     String storedUsername;
     String storedPassword;
+    
+    public Login(String name, String surname,
+                 String storedUsername, String storedPassword) {
+
+        this.name = name;
+        this.surname = surname;
+        this.storedUsername = storedUsername;
+        this.storedPassword = storedPassword;
+    }
 
     public  boolean loginUser(String enteredUsername,String enteredPassword){
         //Checks if the entered username and password match the stored details
