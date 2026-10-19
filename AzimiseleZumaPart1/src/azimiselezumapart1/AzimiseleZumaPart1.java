@@ -2,8 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-
-//package name
 package azimiselezumapart1;
 
 /**
@@ -50,16 +48,15 @@ public class AzimiseleZumaPart1 {
         //Methods within this program,Validate the username password and cellphone number
         checkUsername(input);
         checkPasswordComplexity(input);
-        checkCellphoneNumber(input, cellphone);
+         checkCellphoneNumber( input);
         //Register the user and display the registration result
         System.out.println(registerUser(username,password,name,surname));
         //Creates a login object
-        Login login = new Login();
-        //Stores the registered user details for the login class
-        login.name = name;
-        login.surname = surname;
-        login.storedUsername = username;
-        login.storedPassword = password;
+        Login login = new Login(name,surname,username,password);
+       
+        
+        Message message = new Message();
+        
 
         boolean isLoggedIn = false;
 
@@ -74,6 +71,7 @@ public class AzimiseleZumaPart1 {
         isLoggedIn = login.loginUser(enteredUsername, enteredPassword);
         System.out.println(login.returnLoginStatus(isLoggedIn, name, surname));    
     }
+        message.quickchat(login, input);
         input.close();
     }
     
@@ -148,29 +146,37 @@ public class AzimiseleZumaPart1 {
     }
      
     //Checks whether the cellphone number has the required format
-     public static boolean checkCellphoneNumber(Scanner input, String cellphone){
-         boolean isValid = false;
-         
-         //Kepep asking until a valid cellphone number is entered 
-         while(true){ 
-         System.out.println("Enter your cellphone number");
-         cellphone = input.nextLine();
-         
-         //Conditions the cellphone number has to meet to be successful
-         if (cellphone.startsWith("+27") && cellphone.length() <=13){
-             System.out.println("Cellphone number successfully added");
-             isValid = true;
-             break;
-         }else{
-             System.out.println("Cellphone number incorrectly formatted or does not contain international code");
-         }
-     }
-        return isValid; 
-     }
-     public static String registerUser(String username, String password, String name, String surname) {
-         
-         //Validates that the usernamemeets the required format
-    if (!storedUsername.contains("_") && storedUsername.length() <=5) {
+   
+// Cellphone validation with strict digit check and comment attribution
+public static boolean checkCellphoneNumber(Scanner input) {
+    boolean isValid = false;
+
+    while (!isValid) {
+        System.out.println("Enter your cellphone number");
+        cellphone = input.nextLine();
+
+        // Regex pattern sourced from standard international phone validation guidelines (Oracle Java Documentation / RegexLib)
+        // Ensures exact format: country code +27 followed by exactly 9 digits with no letters.
+        String saPhoneRegex = "^\\+27[0-9]{9}$";
+
+        if (cellphone != null && cellphone.matches(saPhoneRegex)) {
+            System.out.println("Cellphone number successfully added");
+            isValid = true;
+        } else {
+            System.out.println(
+                "Cellphone number incorrectly formatted. "
+                + "Please enter +27 followed by 9 digits."
+            );
+        }
+    }
+
+    return isValid;
+}
+
+     
+   public static String registerUser(String username, String password, String name, String surname) {
+    // Correctly validate the username parameter passed in
+    if (username == null || !username.contains("_") || username.length() > 5) {
         return "Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.";
     } 
     
@@ -178,19 +184,20 @@ public class AzimiseleZumaPart1 {
     boolean hasNumber = false;
     boolean hasSpecial = false;
     
-    //Check the password for capital letter, number and special character
-    for (int i = 0; i < storedPassword.length(); i++) {
-        char ch = storedPassword.charAt(i);
-        if (Character.isUpperCase(ch)) hasCapital = true;
-        if (Character.isDigit(ch)) hasNumber = true;
-        if (!Character.isLetterOrDigit(ch)) hasSpecial = true;
+    // Check the password parameter instead of global storedPassword
+    if (password != null) {
+        for (int i = 0; i < password.length(); i++) {
+            char ch = password.charAt(i);
+            if (Character.isUpperCase(ch)) hasCapital = true;
+            if (Character.isDigit(ch)) hasNumber = true;
+            if (!Character.isLetterOrDigit(ch)) hasSpecial = true;
+        }
     }
-    //Check whether the password meets the complexity requiremnets
-    if (storedPassword.length() < 8 && !hasCapital && !hasNumber && !hasSpecial) {
+    
+    if (password == null || password.length() < 8 || !hasCapital || !hasNumber || !hasSpecial) {
         return "The password does not meet the complexity requirements.";
-    } 
+    }
 
     return "The two above conditions have been met, and the user has been registered successfully.";
 }
-     
 }
