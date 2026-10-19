@@ -3,6 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
 package azimiselezumapart1;
+import static azimiselezumapart1.AzimiseleZumaPart1.name;
+import static azimiselezumapart1.AzimiseleZumaPart1.password;
+import static azimiselezumapart1.AzimiseleZumaPart1.surname;
+import static azimiselezumapart1.AzimiseleZumaPart1.username;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.Scanner;
@@ -63,7 +67,7 @@ public class unitTestpt1 {
     @Test
     public void testLoginUserSuccess() {
         AzimiseleZumaPart1.registerUser("kyl_1", "Ch&&sec@ke99!", "name", "surname");
-        Login login = new Login();
+        Login login = new Login(name,surname,username,password);
         boolean loginResult = login.loginUser("kyl_1", "Ch&&sec@ke99!");
         assertEquals(false,loginResult);
     }
@@ -71,7 +75,7 @@ public class unitTestpt1 {
     @Test
     public void testLoginUserFailure() {
         AzimiseleZumaPart1.registerUser("kyl_1", "Ch&&sec@ke99!", "name", "surname");
-        Login login = new Login();
+        Login login = new Login(name,surname,username,password);
         boolean loginResult = login.loginUser("wrongUser", "wrongPass");
         assertEquals(false,loginResult);
     }
@@ -80,7 +84,7 @@ public class unitTestpt1 {
     public void testReturnLoginStatusSuccessMessage() {
         
         AzimiseleZumaPart1.registerUser("kyl_1", "Ch&&sec@ke99!", "name", "surname");
-        Login login = new Login();
+        Login login = new Login(name,surname,username,password);
         login.storedUsername = "kyl_1";
         login.storedPassword="Ch&&sec@ke99!";
         boolean isLoggedIn = login.loginUser("kyl_1", "Ch&&sec@ke99!");
@@ -89,25 +93,32 @@ public class unitTestpt1 {
         assertEquals(expectedMessage, actualMessage);
     }
     
-    @Test
+@Test
 public void testCheckCellPhoneNumberSuccess() {
     Scanner scan = new Scanner("+27838968976\n");
-    boolean actualResponse = AzimiseleZumaPart1.checkCellphoneNumber(scan, "+27838968976");
-    assertEquals(true, actualResponse);
+
+    boolean actualResponse =
+            AzimiseleZumaPart1.checkCellphoneNumber(scan);
+
+    assertTrue(actualResponse);
 }
 
 @Test
 public void testCheckCellPhoneNumberFailure() {
     Scanner scan = new Scanner("08966552\n+27838968976\n");
-    boolean actualResponse = AzimiseleZumaPart1.checkCellphoneNumber(scan,"08966553");
-    assertEquals(true, actualResponse);
+
+    boolean actualResponse =
+            AzimiseleZumaPart1.checkCellphoneNumber(scan);
+
+    assertTrue(actualResponse);
 }
+
 
 
     @Test
     public void testLoginSuccessful() {
         AzimiseleZumaPart1.registerUser("kyl_1", "Ch&&sec@ke99!", "name", "surname");
-        Login login = new Login();
+        Login login = new Login(name,surname,username,password);
         login.storedUsername = "kyl_1";
         login.storedPassword = "Ch&&sec@ke99!";
         assertTrue(login.loginUser("kyl_1", "Ch&&sec@ke99!"));
@@ -115,7 +126,8 @@ public void testCheckCellPhoneNumberFailure() {
 
     @Test
     public void testLoginFailed() {
-        Login login = new Login();
+        Login login;
+        login = new Login(name,surname,username,password);
         assertFalse(login.loginUser("wrongUser", "wrongPass"));
     }
 
@@ -148,18 +160,24 @@ public void testCheckCellPhoneNumberFailure() {
     }
 
     @Test
-    public void testCellPhoneNumberCorrectlyFormatted() {
-        Scanner scan = new Scanner("+27838968976\n");
-        boolean result = AzimiseleZumaPart1.checkCellphoneNumber(scan, "+27838968976");
-        assertTrue(result);
-    }
+public void testCellPhoneNumberCorrectlyFormatted() {
+    Scanner scan = new Scanner("+27838968976\n");
 
-    @Test
-    public void testCellPhoneNumberIncorrectlyFormatted() {
-        Scanner scan = new Scanner("08966553\n+2783968976\n");
-        boolean result = AzimiseleZumaPart1.checkCellphoneNumber(scan, "08966553");
-        assertTrue(result);
-    }
+    boolean result =
+            AzimiseleZumaPart1.checkCellphoneNumber(scan);
+
+    assertTrue(result);
+}
+
+@Test
+public void testCellPhoneNumberIncorrectlyFormatted() {
+    Scanner scan = new Scanner("08966553\n+2783968976\n");
+
+    boolean result =
+            AzimiseleZumaPart1.checkCellphoneNumber(scan);
+
+    assertTrue(result);
+}
 }
 
    
