@@ -1,0 +1,16 @@
+[
+  {
+    "messageID": "1376347876",
+    "messageNumber": 1,
+    "recipient": "+27828683334",
+    "messageText": "hello ",
+    "messageHash": "13:1:HELLOHELLO"
+  },
+  {
+    "messageID": "7134700169",
+    "messageNumber": 2,
+    "recipient": "+27828683334",
+    "messageText": "hi ",
+    "messageHash": "71:2:HIHI"
+  }
+]
