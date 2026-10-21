@@ -1,0 +1,32 @@
+name: Java CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Compile Java Files
+      run: |
+        echo "Searching for source files..."
+        find src -name "*.java"
+        
+        echo "Creating output directory..."
+        mkdir -p build/classes
+        
+        echo "Compiling project source code..."
+        javac -d build/classes $(find src -name "*.java")
+        echo "Compilation successful!"

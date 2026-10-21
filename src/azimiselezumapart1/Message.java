@@ -152,7 +152,7 @@ public String createMessageHash() {
             while(choice !=3){
                 System.out.println("\nQuickChat Menu");
                 System.out.println("1. Send Messages");
-                System.out.println("2. Show recently sent messages");
+                System.out.println("2. Show recently sent messages.");
                 System.out.println("3. Quit");
                 System.out.println("Enter choice");
                 
@@ -183,7 +183,7 @@ public String createMessageHash() {
                                         Message message = new Message();
                                         String result = message.generateMessageID();
  // Give this message its number.
-message.messageNumber = nextMessageNumber++;
+message.messageNumber = i;
 
 System.out.println("Message attempt " + i);
 System.out.println(result);
@@ -203,11 +203,14 @@ System.out.println(result);
 
                         while (!validMessage) {
                             System.out.println("Enter your message:");
-                            message.messageText = input.nextLine();
-
+                           
  // Accept messages that are not empty and contain no more than 250 characters.                          
-if (message.messageText.length() <=250
-        && !message.messageText.trim().isEmpty()) {
+message.messageText = input.nextLine();
+
+String validationResult =
+        message.validateMessageLength(message.messageText);
+
+if (validationResult.equals("Message ready to send.")) {
 
     validMessage = true;
 
@@ -247,7 +250,7 @@ if (message.actionChoice >= 1 && message.actionChoice <= 3) {
 
 } else {
     System.out.println(
-        "Please enter a message of less than 250 or fewer characters."
+        "Please enter a message of less than 250 or fewer ."
     );
 }
 
@@ -273,13 +276,7 @@ if (message.actionChoice >= 1 && message.actionChoice <= 3) {
                             break;
                             
     case 2:
-    System.out.println("Recently Sent Messages:");
-
-    if (sentMessages.isEmpty()) {
-        System.out.println("No messages have been sent yet.");
-    } else {
-        System.out.println(printMessages());
-    }
+    System.out.println("Coming Soon.");
     break;
 
 
