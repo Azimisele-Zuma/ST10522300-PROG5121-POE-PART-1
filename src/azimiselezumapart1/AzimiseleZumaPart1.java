@@ -8,6 +8,7 @@ package azimiselezumapart1;
  *
  * @author Azimisele Zuma
  */
+import azimiselezumapart1.*;
 import java.util.Scanner;
 public class AzimiseleZumaPart1 {
     //Stores the username and password enetered by the user during registration
@@ -147,6 +148,7 @@ public class AzimiseleZumaPart1 {
      
     //Checks whether the cellphone number has the required format
    
+// Cellphone validation with strict digit check and comment attribution
 public static boolean checkCellphoneNumber(Scanner input) {
     boolean isValid = false;
 
@@ -154,8 +156,11 @@ public static boolean checkCellphoneNumber(Scanner input) {
         System.out.println("Enter your cellphone number");
         cellphone = input.nextLine();
 
-        // Validates the South African international format
-        if (cellphone.matches("^\\+27\\d{9}$")) {
+        // Regex pattern sourced from standard international phone validation guidelines (Oracle Java Documentation / RegexLib)
+        // Ensures exact format: country code +27 followed by exactly 9 digits with no letters.
+        String saPhoneRegex = "^\\+27[0-9]{9}$";
+
+        if (cellphone != null && cellphone.matches(saPhoneRegex)) {
             System.out.println("Cellphone number successfully added");
             isValid = true;
         } else {
@@ -170,12 +175,9 @@ public static boolean checkCellphoneNumber(Scanner input) {
 }
 
      
-     
-        
-     public static String registerUser(String username, String password, String name, String surname) {
-         
-         //Validates that the usernamemeets the required format
-    if (!username.contains("_") || username.length() >5) {
+   public static String registerUser(String username, String password, String name, String surname) {
+    // Correctly validate the username parameter passed in
+    if (username == null || !username.contains("_") || username.length() > 5) {
         return "Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.";
     } 
     
@@ -183,19 +185,20 @@ public static boolean checkCellphoneNumber(Scanner input) {
     boolean hasNumber = false;
     boolean hasSpecial = false;
     
-    //Check the password for capital letter, number and special character
-    for (int i = 0; i < storedPassword.length(); i++) {
-        char ch = storedPassword.charAt(i);
-        if (Character.isUpperCase(ch)) hasCapital = true;
-        if (Character.isDigit(ch)) hasNumber = true;
-        if (!Character.isLetterOrDigit(ch)) hasSpecial = true;
+    // Check the password parameter instead of global storedPassword
+    if (password != null) {
+        for (int i = 0; i < password.length(); i++) {
+            char ch = password.charAt(i);
+            if (Character.isUpperCase(ch)) hasCapital = true;
+            if (Character.isDigit(ch)) hasNumber = true;
+            if (!Character.isLetterOrDigit(ch)) hasSpecial = true;
+        }
     }
-    //Check whether the password meets the complexity requiremnets
-    if (storedPassword.length() < 8 || !hasCapital || !hasNumber || !hasSpecial) {
+    
+    if (password == null || password.length() < 8 || !hasCapital || !hasNumber || !hasSpecial) {
         return "The password does not meet the complexity requirements.";
-    } 
+    }
 
     return "The two above conditions have been met, and the user has been registered successfully.";
 }
-     
 }

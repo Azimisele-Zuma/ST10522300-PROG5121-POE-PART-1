@@ -4,6 +4,8 @@
  */
 package azimiselezumapart1;
 
+import azimiselezumapart1.*;
+
 /**
  *
  * @author Azimisele Zuma
@@ -12,8 +14,8 @@ public class Login {
     //Stores the ysers personal details and login information
     String name;
     String surname;
-    String storedUsername;
-    String storedPassword;
+    public String storedUsername;
+    public String storedPassword;
     
     public Login(String name, String surname,
                  String storedUsername, String storedPassword) {
