@@ -86,13 +86,13 @@ public class unitTestpt2 {
     @Test
     public void testCellPhoneNumberCorrectlyFormatted() {
         Scanner scan = new Scanner("+27838968976\n");
-        assertTrue(AzimiseleZumaPart1.checkCellphoneNumber(scan));
+        assertTrue(AzimiseleZumaPart1.checkCellphoneNumber(scan,"+27838968976"));
     }
 
     @Test
     public void testCellPhoneNumberIncorrectlyFormatted() {
         Scanner scan = new Scanner("08966553\n+27838968976\n");
-        assertTrue(AzimiseleZumaPart1.checkCellphoneNumber(scan));
+        assertTrue(AzimiseleZumaPart1.checkCellphoneNumber(scan,"08966553"));
     }
 }
 
