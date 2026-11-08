@@ -181,7 +181,7 @@ public String createMessageHash() {
     System.out.println("Longest stored message: "
             + displayLongestMessage());
 
-    System.out.println("===== QuickChat =====");
+   
         System.out.println("===== QuickChat =====");
             System.out.println("Welcome to QuickChat.");
             
