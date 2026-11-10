@@ -39,6 +39,13 @@ public String returnLoginStatus(boolean isLoggedIn, String name, String surname)
     }
     return "Username or password is incorrect please try again.";
 }
+public String getName() {
+    return name;
+}
+
+public String getSurname() {
+    return surname;
+}
 }
 
     
