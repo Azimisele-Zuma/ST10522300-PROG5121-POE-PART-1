@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,6 +30,7 @@ public class Message {
     private String recipient;
     private String messageText;
     private String messageHash;
+    private String sender;
     
     // Keeps track of the next message number.
     private static int nextMessageNumber = 1;
@@ -193,6 +195,7 @@ public String createMessageHash() {
                 System.out.println("1. Send Messages");
                 System.out.println("2. Show recently sent messages.");
                 System.out.println("3. Quit");
+                System.out.println("4. Stored Message");
                 System.out.println("Enter choice");
                 
                 if(input.hasNextInt()){
@@ -220,6 +223,8 @@ public String createMessageHash() {
                                         
                                         //a new message object.
                                         Message message = new Message();
+                                        // Retrieve the sender's name and surname from Login.
+                                        message.sender = login.getName() + " " + login.getSurname();
                                         String result = message.generateMessageID();
  // Give this message its number.
 message.messageNumber = i;
@@ -319,17 +324,79 @@ if (message.actionChoice >= 1 && message.actionChoice <= 3) {
     break;
 
 
-                        case 3:
-                            System.out.println(
-                                "Thank you for using QuickChat."
-                            );
-                            break;
+           
+case 3:
+    System.out.println("Thank you for using QuickChat.");
+    break;
 
-                        default:
-                            System.out.println(
-                                "Invalid choice. Please select 1, 2, or 3."
-                            );
-                            break;
+case 4:
+
+    int storedChoice = 0;
+
+    while (storedChoice != 7) {
+
+        System.out.println("\n===== Stored Messages =====");
+        System.out.println("1. Display sender and recipient");
+        System.out.println("2. Display longest stored message");
+        System.out.println("3. Search by Message ID");
+        System.out.println("4. Search by recipient");
+        System.out.println("5. Delete message by Message Hash");
+        System.out.println("6. Display stored messages report");
+        System.out.println("7. Return to main menu");
+        System.out.println("Enter your choice:");
+
+        if (input.hasNextInt()) {
+            storedChoice = input.nextInt();
+            input.nextLine();
+
+            switch (storedChoice) {
+
+                case 1:
+                System.out.println(displaySenderRecipient());
+                break;
+
+                case 2:
+                    System.out.println("Longest stored message: "
+                            + displayLongestMessage());
+                    break;
+
+                case 3:
+                    System.out.println("Search by Message ID.");
+                    break;
+
+                case 4:
+                    System.out.println("Search by recipient.");
+                    break;
+
+                case 5:
+                    System.out.println("Delete message by Message Hash.");
+                    break;
+
+                case 6:
+                    System.out.println("Display stored messages report.");
+                    break;
+
+                case 7:
+                    System.out.println("Returning to main menu.");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please select 1-7.");
+                    break;
+            }
+
+        } else {
+            System.out.println("Invalid input. Please enter a number.");
+            input.nextLine();
+        }
+    }
+
+    break;
+
+default:
+    System.out.println("Invalid choice. Please select 1, 2, 3 or 4.");
+    break;
+
                     }
                 }else{
                     System.out.println("Invalid input.Please enter a number.");
@@ -404,7 +471,7 @@ public void storeMessage() {
 }
 
     // Open messages.json and replace its contents with the stored messages.
-    try (FileWriter writer = new FileWriter("messages.json")) {
+    try (FileWriter writer = new FileWriter("C:\\\\Users\\\\zgcob\\\\OneDrive\\\\Desktop\\\\AZ\\\\messages.json")) {
         writer.write("[\n");
 
         
@@ -415,7 +482,7 @@ public void storeMessage() {
             writer.write("  {\n");
             writer.write("    \"messageID\": \"" + message.messageID + "\",\n");
             writer.write("    \"messageNumber\": " + message.messageNumber + ",\n");
-            writer.write("    \"recipient\": \"" + message.recipient + "\",\n");
+            writer.write("    \"sender\": \"" + message.sender + "\",\n");
             writer.write("    \"messageText\": \"" + escapeJson(message.messageText) + "\",\n");
             writer.write("    \"messageHash\": \"" + message.messageHash + "\"\n");
             writer.write("  }");
@@ -440,7 +507,7 @@ public void loadStoredMessages() {
 
     JSONParser parser = new JSONParser();
 
-    try (FileReader reader = new FileReader("messages.json")) {
+    try (FileReader reader = new FileReader("C:\\\\Users\\\\zgcob\\\\OneDrive\\\\Desktop\\\\AZ\\\\messages.json")) {
 
         // Read the JSON array from the file.
         JSONArray messages = (JSONArray) parser.parse(reader);
@@ -459,6 +526,7 @@ public void loadStoredMessages() {
             message.messageNumber =
                     ((Number) jsonMessage.get("messageNumber")).intValue();
             message.recipient = (String) jsonMessage.get("recipient");
+            message.sender = (String) jsonMessage.get("sender");
             message.messageText = (String) jsonMessage.get("messageText");
             message.messageHash = (String) jsonMessage.get("messageHash");
 
@@ -521,6 +589,34 @@ public static boolean containsMessageHash(String hash) {
     }
     return false;
 }
+
+
+public static String displaySenderRecipient() {
+    if (storedMessageCount == 0) {
+        return "No stored messages available.";
+    }
+
+    StringBuilder details = new StringBuilder();
+
+    for (int i = 0; i < storedMessageCount; i++) {
+        Message message = storedMessages[i];
+
+        details.append("Sender: ")
+               .append(message.sender == null ? "Unknown" : message.sender)
+               .append("\n");
+
+        details.append("Recipient: ")
+               .append(message.recipient == null ? "Unknown" : message.recipient)
+               .append("\n");
+
+        details.append("-------------------------\n");
+    }
+
+    return details.toString();
+}
+
+
+
 
 public String displayLongestMessage() {
 
