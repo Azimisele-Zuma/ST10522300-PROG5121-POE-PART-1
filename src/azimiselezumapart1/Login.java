@@ -35,7 +35,7 @@ public class Login {
 public String returnLoginStatus(boolean isLoggedIn, String name, String surname){
     //Returns a message based on whether the login was sucessful or unsuccessful
     if(isLoggedIn){
-    return "Welcome" + " " + name + " " + surname + " " + "it is great to see you again";
+    return "\nWelcome" + " " + name + " " + surname + " " + "it is great to see you again\n";
     }
     return "Username or password is incorrect please try again.";
 }
