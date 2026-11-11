@@ -1,1 +1,10 @@
-
+[
+  {
+    "messageID": "2826627576",
+    "messageNumber": 1,
+    "sender": "azi  zujma ",
+    "recipient": "+27837388264",
+    "messageText": "Hello world",
+    "messageHash": "28:1:HELLOWORLD"
+  }
+]
