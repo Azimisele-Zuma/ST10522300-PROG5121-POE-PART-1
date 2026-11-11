@@ -60,6 +60,7 @@ private static int sentMessageCount = 0;
 private static int disregardedMessageCount = 0;
 private static int messageHashCount = 0;
 private static int messageIDCount = 0;
+private static final String JSON_FILE_PATH = "C:\\\\Users\\\\zgcob\\\\OneDrive\\\\Desktop\\\\AZ\\\\src\\\\azimiselezumapart1\\\\messages.json";
 
     
     
@@ -173,15 +174,9 @@ public String createMessageHash() {
     // Main menu for the QuickChat messaging system.
     public void quickchat(Login login, Scanner input) {
 
-    System.out.println("JSON file location: "
-            + new java.io.File("messages.json").getAbsolutePath());
+   
 
     loadStoredMessages();
-
-    System.out.println("Stored messages loaded: " + storedMessageCount);
-
-    System.out.println("Longest stored message: "
-            + displayLongestMessage());
 
    
         System.out.println("===== QuickChat =====");
@@ -227,7 +222,7 @@ public String createMessageHash() {
                                         message.sender = login.getName() + " " + login.getSurname();
                                         String result = message.generateMessageID();
  // Give this message its number.
-message.messageNumber = i;
+message.messageNumber = nextMessageNumber++;
 
 System.out.println("Message attempt " + i);
 System.out.println(result);
@@ -240,7 +235,8 @@ System.out.println(result);
                                             }
                                         
                                         // Ask for and validate the recipient's number.
-                                        System.out.println(message.checkRecipientCell(input));
+                                        String recipientResult = message.checkRecipientCell(input);
+                                        System.out.println(recipientResult);    
                                       
                         // Keep asking for text until it is valid.               
                         boolean validMessage = false;
@@ -320,9 +316,15 @@ if (message.actionChoice >= 1 && message.actionChoice <= 3) {
                             break;
                             
     case 2:
-    System.out.println("Coming Soon.");
-    break;
+    System.out.println("\n===== Recently Sent Messages =====");
 
+    if (sentMessageCount == 0) {
+        System.out.println("No messages have been sent yet.");
+    } else {
+        System.out.println(printMessages());
+    }
+
+    break;
 
            
 case 3:
@@ -360,13 +362,79 @@ case 4:
                             + displayLongestMessage());
                     break;
 
-                case 3:
-                    System.out.println("Search by Message ID.");
-                    break;
+                case 3: {
+    if (storedMessageCount == 0) {
+        System.out.println("No stored messages available.");
+        break;
+    }
 
-                case 4:
-                    System.out.println("Search by recipient.");
-                    break;
+    System.out.print("Enter the Message ID you want to search for: ");
+    String searchID = input.nextLine();
+
+    boolean found = false;
+
+    for (int i = 0; i < storedMessageCount; i++) {
+        Message message = storedMessages[i];
+
+        if (message.messageID != null
+                && message.messageID.equals(searchID)) {
+
+            System.out.println("\n========== STORED MESSAGE FOUND ==========");
+            System.out.println("Message ID: " + message.messageID);
+            System.out.println("Message Number: " + message.messageNumber);
+            System.out.println("Sender: " + message.sender);
+            System.out.println("Recipient: " + message.recipient);
+            System.out.println("Message: " + message.messageText);
+            System.out.println("Message Hash: " + message.messageHash);
+            System.out.println("==========================================");
+
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        System.out.println("Message not found.");
+    }
+
+    break;
+}
+               case 4: {
+    if (storedMessageCount == 0) {
+        System.out.println("No stored messages available.");
+        break;
+    }
+
+    System.out.print("Enter the recipient's cellphone number: ");
+    String searchRecipient = input.nextLine();
+
+    boolean found = false;
+
+    for (int i = 0; i < storedMessageCount; i++) {
+        Message message = storedMessages[i];
+
+        if (message.recipient != null
+                && message.recipient.equals(searchRecipient)) {
+
+            System.out.println("\n========== STORED MESSAGE ==========");
+            System.out.println("Message ID: " + message.messageID);
+            System.out.println("Message Number: " + message.messageNumber);
+            System.out.println("Sender: " + message.sender);
+            System.out.println("Recipient: " + message.recipient);
+            System.out.println("Message: " + message.messageText);
+            System.out.println("Message Hash: " + message.messageHash);
+            System.out.println("====================================");
+
+            found = true;
+        }
+    }
+
+    if (!found) {
+        System.out.println("No stored messages found for this recipient.");
+    }
+
+    break;
+}
 
                 case 5:
                     System.out.println("Delete message by Message Hash.");
@@ -441,24 +509,23 @@ public static int returnTotalMessages() {
 // Builds a readable report of all successfully sent messages.              
 // Builds a readable report of all successfully sent messages.
 public static String printMessages() {
-    StringBuilder messages = new StringBuilder();
+    StringBuilder output = new StringBuilder();
+
+    output.append("\n========== SENT MESSAGE ==========\n");
 
     for (int i = 0; i < sentMessageCount; i++) {
         Message message = sentMessages[i];
 
-        messages.append("Message ID: ")
-                .append(message.messageID).append("\n");
-        messages.append("Message Number: ")
-                .append(message.messageNumber).append("\n");
-        messages.append("Recipient: ")
-                .append(message.recipient).append("\n");
-        messages.append("Message: ")
-                .append(message.messageText).append("\n");
-        messages.append("Message Hash: ")
-                .append(message.messageHash).append("\n");
+        output.append("\nMessage ID: ").append(message.messageID).append("\n");
+        output.append("Message Number: ").append(message.messageNumber).append("\n");
+        output.append("Recipient: ").append(message.recipient).append("\n");
+        output.append("Message: ").append(message.messageText).append("\n");
+        output.append("Message Hash: ").append(message.messageHash).append("\n");
+
+        output.append("==================================\n");
     }
 
-    return messages.toString();
+    return output.toString();
 }
 
 
@@ -469,9 +536,13 @@ public void storeMessage() {
     storedMessages[storedMessageCount] = this;
     storedMessageCount++;
 }
+System.out.println("DEBUG Sender: " + sender);
+System.out.println("DEBUG Recipient: " + recipient);
+System.out.println("DEBUG Message: " + messageText);
+System.out.println("DEBUG Message Hash: " + messageHash);
 
     // Open messages.json and replace its contents with the stored messages.
-    try (FileWriter writer = new FileWriter("C:\\\\Users\\\\zgcob\\\\OneDrive\\\\Desktop\\\\AZ\\\\messages.json")) {
+    try (FileWriter writer = new FileWriter(JSON_FILE_PATH)) {
         writer.write("[\n");
 
         
@@ -483,6 +554,7 @@ public void storeMessage() {
             writer.write("    \"messageID\": \"" + message.messageID + "\",\n");
             writer.write("    \"messageNumber\": " + message.messageNumber + ",\n");
             writer.write("    \"sender\": \"" + message.sender + "\",\n");
+            writer.write("    \"recipient\": \"" + escapeJson(message.recipient) + "\",\n");
             writer.write("    \"messageText\": \"" + escapeJson(message.messageText) + "\",\n");
             writer.write("    \"messageHash\": \"" + message.messageHash + "\"\n");
             writer.write("  }");
@@ -507,13 +579,16 @@ public void loadStoredMessages() {
 
     JSONParser parser = new JSONParser();
 
-    try (FileReader reader = new FileReader("C:\\\\Users\\\\zgcob\\\\OneDrive\\\\Desktop\\\\AZ\\\\messages.json")) {
+    try (FileReader reader = new FileReader(JSON_FILE_PATH)) {
 
         // Read the JSON array from the file.
         JSONArray messages = (JSONArray) parser.parse(reader);
 
         // Reset the counter before loading messages from the JSON file.
         storedMessageCount = 0;
+        messageIDCount = 0;
+        messageHashCount = 0;
+        usedMessageIDs.clear();
 
         // Read each message in the JSON array.
         for (Object obj : messages) {
