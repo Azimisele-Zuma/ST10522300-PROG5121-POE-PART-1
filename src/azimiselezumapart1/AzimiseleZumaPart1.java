@@ -66,7 +66,8 @@ public class AzimiseleZumaPart1 {
         Login login = new Login(name, surname, username, password);
 
         Message message = new Message();
-
+        
+        
         boolean isLoggedIn = false;
 
         // Login section.
