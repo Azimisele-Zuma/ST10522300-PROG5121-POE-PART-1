@@ -399,50 +399,69 @@ case 4:
 
     break;
 }
-               case 4: {
-    if (storedMessageCount == 0) {
-        System.out.println("No stored messages available.");
-        break;
-    }
+  
+case 4: {
 
     System.out.print("Enter the recipient's cellphone number: ");
     String searchRecipient = input.nextLine();
 
     boolean found = false;
 
-    for (int i = 0; i < storedMessageCount; i++) {
-        Message message = storedMessages[i];
+    System.out.println("\n===== Messages for Recipient =====");
 
-        if (message.recipient != null
-                && message.recipient.equals(searchRecipient)) {
+    // Search messages that were successfully sent.
+    for (int i = 0; i < sentMessageCount; i++) {
 
-            System.out.println("\n========== STORED MESSAGE ==========");
-            System.out.println("Message ID: " + message.messageID);
-            System.out.println("Message Number: " + message.messageNumber);
+        Message message = sentMessages[i];
+
+        if (message != null
+                && searchRecipient.equals(message.recipient)) {
+
             System.out.println("Sender: " + message.sender);
             System.out.println("Recipient: " + message.recipient);
             System.out.println("Message: " + message.messageText);
             System.out.println("Message Hash: " + message.messageHash);
-            System.out.println("====================================");
+
+            found = true;
+        }
+    }
+
+    // Search messages that were stored.
+    for (int i = 0; i < storedMessageCount; i++) {
+
+        Message message = storedMessages[i];
+
+        if (message != null
+                && searchRecipient.equals(message.recipient)) {
+
+            System.out.println("Sender: " + message.sender);
+            System.out.println("Recipient: " + message.recipient);
+            System.out.println("Message: " + message.messageText);
+            System.out.println("Message Hash: " + message.messageHash);
 
             found = true;
         }
     }
 
     if (!found) {
-        System.out.println("No stored messages found for this recipient.");
+        System.out.println(
+            "No messages found for this recipient."
+        );
     }
 
     break;
 }
 
+
+  
+
                 case 5:
-                    System.out.println("Delete message by Message Hash.");
-                    break;
+                deleteStoredMessage(input);
+                break;
 
                 case 6:
-                    System.out.println("Display stored messages report.");
-                    break;
+                displayStoredMessagesReport();
+                break;
 
                 case 7:
                     System.out.println("Returning to main menu.");
@@ -471,6 +490,7 @@ default:
                     input.nextLine();
                 }
             }
+         
         }
 
  // Performs the action selected by the user.
@@ -532,23 +552,29 @@ public static String printMessages() {
 
 // Stores the message in memory and writes all stored messages to JSON.
 public void storeMessage() {
-    if (storedMessageCount < storedMessages.length) {
-    storedMessages[storedMessageCount] = this;
-    storedMessageCount++;
-}
-System.out.println("DEBUG Sender: " + sender);
-System.out.println("DEBUG Recipient: " + recipient);
-System.out.println("DEBUG Message: " + messageText);
-System.out.println("DEBUG Message Hash: " + messageHash);
 
-    // Open messages.json and replace its contents with the stored messages.
+    if (storedMessageCount < storedMessages.length) {
+        storedMessages[storedMessageCount] = this;
+        storedMessageCount++;
+    }
+
+    System.out.println("DEBUG Sender: " + sender);
+    System.out.println("DEBUG Recipient: " + recipient);
+    System.out.println("DEBUG Message: " + messageText);
+    System.out.println("DEBUG Message Hash: " + messageHash);
+
+    saveStoredMessagesToJson();
+}
+
+private void saveStoredMessagesToJson() {
+
     try (FileWriter writer = new FileWriter(JSON_FILE_PATH)) {
+
         writer.write("[\n");
 
-        
-       //stored messages are written as a JSON object
-       for (int i = 0; i < storedMessageCount; i++) {
-         Message message = storedMessages[i];
+        for (int i = 0; i < storedMessageCount; i++) {
+
+            Message message = storedMessages[i];
 
             writer.write("  {\n");
             writer.write("    \"messageID\": \"" + message.messageID + "\",\n");
@@ -569,7 +595,6 @@ System.out.println("DEBUG Message Hash: " + messageHash);
         writer.write("]\n");
 
     } catch (IOException e) {
-        // Display an error if the file cannot be written.
         System.out.println("Error saving message: " + e.getMessage());
     }
 }
@@ -714,6 +739,133 @@ public String displayLongestMessage() {
 }
 
 
+public String searchMessageByID(String id) {
+
+    // Search sent messages.
+    for (int i = 0; i < sentMessageCount; i++) {
+        Message message = sentMessages[i];
+
+        if (message != null
+                && message.messageID != null
+                && message.messageID.equals(id)) {
+            return message.messageText;
+        }
+    }
+
+    // Search stored messages.
+    for (int i = 0; i < storedMessageCount; i++) {
+        Message message = storedMessages[i];
+
+        if (message != null
+                && message.messageID != null
+                && message.messageID.equals(id)) {
+            return message.messageText;
+        }
+    }
+
+    return "Message not found.";
 }
+
+public String searchMessagesByRecipient(String recipient) {
+
+    StringBuilder results = new StringBuilder();
+
+    // Search successfully sent messages.
+    for (int i = 0; i < sentMessageCount; i++) {
+        Message message = sentMessages[i];
+
+        if (message != null
+                && recipient.equals(message.recipient)) {
+            results.append(message.messageText).append("\n");
+        }
+    }
+
+    // Search stored messages.
+    for (int i = 0; i < storedMessageCount; i++) {
+        Message message = storedMessages[i];
+
+        if (message != null
+                && recipient.equals(message.recipient)) {
+            results.append(message.messageText).append("\n");
+        }
+    }
+
+    return results.toString();
+}
+
+
+
+
+public void displayStoredMessagesReport() {
+
+    if (sentMessageCount == 0) {
+        System.out.println("No sent messages available.");
+        return;
+    }
+
+    System.out.println("\n===== SENT MESSAGES REPORT =====");
+
+    for (int i = 0; i < sentMessageCount; i++) {
+
+        Message message = sentMessages[i];
+
+        System.out.println("\nMessage " + (i + 1));
+        System.out.println("Message Hash: " + message.messageHash);
+        System.out.println("Recipient: " + message.recipient);
+        System.out.println("Message: " + message.messageText);
+
+        System.out.println("----------------------------------");
+    }
+}
+
+
+
+
+
+public void deleteStoredMessage(Scanner input) {
+
+    if (storedMessageCount == 0) {
+        System.out.println("No stored messages available.");
+        return;
+    }
+
+    System.out.println("Enter the Message Hash of the message you want to delete:");
+    String searchHash = input.nextLine();
+
+    boolean found = false;
+
+    for (int i = 0; i < storedMessageCount; i++) {
+
+        if (storedMessages[i] != null
+                && storedMessages[i].messageHash != null
+                && searchHash.equals(storedMessages[i].messageHash)) {
+
+            // Remove the message by shifting the remaining messages.
+            for (int j = i; j < storedMessageCount - 1; j++) {
+                storedMessages[j] = storedMessages[j + 1];
+            }
+
+            // Reduce the number of stored messages.
+            storedMessageCount--;
+
+            // Clear the last position.
+            storedMessages[storedMessageCount] = null;
+
+            found = true;
+
+            // Update the JSON file.
+            saveStoredMessagesToJson();
+
+            System.out.println("Message successfully deleted.");
+            break;
+        }
+    }
+
+    if (!found) {
+        System.out.println("Message Hash not found.");
+    }
+}
+}
+
     
 
