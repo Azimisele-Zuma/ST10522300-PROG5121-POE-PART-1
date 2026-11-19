@@ -60,8 +60,7 @@ private static int sentMessageCount = 0;
 private static int disregardedMessageCount = 0;
 private static int messageHashCount = 0;
 private static int messageIDCount = 0;
-private static final String JSON_FILE_PATH = "C:\\\\Users\\\\zgcob\\\\OneDrive\\\\Desktop\\\\AZ\\\\src\\\\azimiselezumapart1\\\\messages.json";
-
+private static final String JSON_FILE_PATH = "src/azimiselezumapart1/messages.json";
     
     
     public Message() {
@@ -185,12 +184,12 @@ public String createMessageHash() {
             int choice = 0;
             
             // The menu repeats until the user chooses option 3.
-            while(choice !=3){
+            while(choice !=4){
                 System.out.println("\nQuickChat Menu");
                 System.out.println("1. Send Messages");
                 System.out.println("2. Show recently sent messages.");
-                System.out.println("3. Quit");
-                System.out.println("4. Stored Message");
+                System.out.println("3. Stored Message");
+                System.out.println("4. Quit  ");
                 System.out.println("Enter choice");
                 
                 if(input.hasNextInt()){
@@ -328,10 +327,6 @@ if (message.actionChoice >= 1 && message.actionChoice <= 3) {
 
            
 case 3:
-    System.out.println("Thank you for using QuickChat.");
-    break;
-
-case 4:
 
     int storedChoice = 0;
 
@@ -399,6 +394,11 @@ case 4:
 
     break;
 }
+
+ 
+    
+
+   
   
 case 4: {
 
@@ -453,7 +453,6 @@ case 4: {
 }
 
 
-  
 
                 case 5:
                 deleteStoredMessage(input);
@@ -478,6 +477,10 @@ case 4: {
         }
     }
 
+    break;
+    
+case 4:
+    System.out.println("Thank you for using QuickChat.");
     break;
 
 default:
@@ -557,12 +560,6 @@ public void storeMessage() {
         storedMessages[storedMessageCount] = this;
         storedMessageCount++;
     }
-
-    System.out.println("DEBUG Sender: " + sender);
-    System.out.println("DEBUG Recipient: " + recipient);
-    System.out.println("DEBUG Message: " + messageText);
-    System.out.println("DEBUG Message Hash: " + messageHash);
-
     saveStoredMessagesToJson();
 }
 
@@ -796,27 +793,33 @@ public String searchMessagesByRecipient(String recipient) {
 
 
 
+
 public void displayStoredMessagesReport() {
 
-    if (sentMessageCount == 0) {
-        System.out.println("No sent messages available.");
+    if (storedMessageCount == 0) {
+        System.out.println("No stored messages available.");
         return;
     }
 
-    System.out.println("\n===== SENT MESSAGES REPORT =====");
+    System.out.println("\n===== STORED MESSAGES REPORT =====");
 
-    for (int i = 0; i < sentMessageCount; i++) {
+    for (int i = 0; i < storedMessageCount; i++) {
 
-        Message message = sentMessages[i];
+        Message message = storedMessages[i];
 
         System.out.println("\nMessage " + (i + 1));
-        System.out.println("Message Hash: " + message.messageHash);
+        System.out.println("Message ID: " + message.messageID);
+        System.out.println("Message Number: " + message.messageNumber);
+        System.out.println("Sender: " + message.sender);
         System.out.println("Recipient: " + message.recipient);
         System.out.println("Message: " + message.messageText);
+        System.out.println("Message Hash: " + message.messageHash);
 
         System.out.println("----------------------------------");
     }
 }
+
+
 
 
 
